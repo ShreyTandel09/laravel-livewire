@@ -48,9 +48,9 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Users</h3>
-                        <p class="text-3xl font-bold text-blue-600" x-text="stats.users.toLocaleString()"></p>
+                        <p class="text-3xl font-bold text-blue-600">{{ number_format($totalUser) }}</p>
                         <p class="text-sm text-gray-500 mt-1">
-                            <span class="text-green-600" x-text="stats.usersGrowth"></span> from last period
+                            <span class="text-green-600">{{ $usersGrowth }}</span> from last period
                         </p>
                     </div>
                     <div class="text-blue-600">
@@ -63,9 +63,9 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
-                        <p class="text-3xl font-bold text-green-600" x-text="'$' + stats.revenue.toLocaleString()"></p>
+                        <p class="text-3xl font-bold text-pink-600">{{ number_format($revenue) }}</p>
                         <p class="text-sm text-gray-500 mt-1">
-                            <span class="text-green-600" x-text="stats.revenueGrowth"></span> from last period
+                            <span class="text-green-600">{{ $revenueGrowth }}</span> from last period
                         </p>
                     </div>
                     <div class="text-green-600">
@@ -78,9 +78,9 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Orders</h3>
-                        <p class="text-3xl font-bold text-purple-600" x-text="stats.orders.toLocaleString()"></p>
+                        <p class="text-3xl font-bold text-purple-600">{{ number_format($orders) }}</p>
                         <p class="text-sm text-gray-500 mt-1">
-                            <span class="text-green-600" x-text="stats.ordersGrowth"></span> from last period
+                            <span class="text-green-600">{{ $ordersGrowth }}</span> from last period
                         </p>
                     </div>
                     <div class="text-purple-600">
@@ -93,9 +93,9 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Conversion Rate</h3>
-                        <p class="text-3xl font-bold text-orange-600" x-text="stats.conversionRate + '%'"></p>
+                        <p class="text-3xl font-bold text-orange-600">{{ number_format($conversionRate) }}</p>
                         <p class="text-sm text-gray-500 mt-1">
-                            <span class="text-green-600" x-text="stats.conversionGrowth"></span> from last period
+                            <span class="text-green-600">{{ $conversionGrowth }}</span> from last period
                         </p>
                     </div>
                     <div class="text-orange-600">
@@ -174,16 +174,16 @@
 
                 // paginateData: '',
                 // Data
-                stats: {
-                    users: 1234,
-                    usersGrowth: '+12%',
-                    revenue: 45678,
-                    revenueGrowth: '+8%',
-                    orders: 892,
-                    ordersGrowth: '+15%',
-                    conversionRate: 3.2,
-                    conversionGrowth: '+0.5%'
-                },
+                // stats: {
+                //     users: 1234,
+                //     usersGrowth: '+12%',
+                //     revenue: 45678,
+                //     revenueGrowth: '+8%',
+                //     orders: 892,
+                //     ordersGrowth: '+15%',
+                //     conversionRate: 3.2,
+                //     conversionGrowth: '+0.5%'
+                // },
 
                 // Methods
                 init() {

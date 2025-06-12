@@ -161,31 +161,35 @@ final class UserTable extends PowerGridComponent
         return [];
     }
 
-    #[\Livewire\Attributes\On('delete')]
     public function delete($rowId): void
     {
-        if (Auth::id() == $rowId) {
-            $this->dispatch('showToast', [
-                'type' => 'error',
-                'message' => 'You cannot delete your own account.',
-            ]);
-            return;
-        }
+        try {
+            //code...
+            if (Auth::id() == $rowId) {
+                $this->dispatch('showToast', [
+                    'type' => 'error',
+                    'message' => 'You cannot delete your own account.',
+                ]);
+                return;
+            }
 
-        $user = User::find($rowId);
+            $user = User::find($rowId);
 
-        if ($user) {
-            $user->delete();
-            $this->dispatch('$refresh');
-            $this->dispatch('showToast', [
-                'type' => 'success', // Changed to success for delete confirmation
-                'message' => 'User deleted successfully!',
-            ]);
-        } else {
-            $this->dispatch('showToast', [
-                'type' => 'error',
-                'message' => 'User not found.',
-            ]);
+            if ($user) {
+                $user->delete();
+                $this->dispatch('$refresh');
+                $this->dispatch('showToast', [
+                    'type' => 'success',
+                    'message' => 'User deleted successfully!',
+                ]);
+            } else {
+                $this->dispatch('showToast', [
+                    'type' => 'error',
+                    'message' => 'User not found.',
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 
