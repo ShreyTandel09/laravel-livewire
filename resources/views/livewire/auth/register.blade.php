@@ -218,7 +218,7 @@
                             :disabled="!isFormValid || isSubmitting"
                             class="w-full py-2.5 px-4 rounded-md text-sm font-medium transition-all duration-200 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
                             :class="isFormValid && !isSubmitting ? 
-                                'btn btn-outline btn-error text-white' : 
+                                'bg-indigo-500 hover:bg-indigo-600 text-white' : 
                                 'bg-gray-300 text-gray-500 cursor-not-allowed'">
                             <span x-show="!isSubmitting">Create Account</span>
                             <span x-show="isSubmitting" class="flex items-center justify-center">
