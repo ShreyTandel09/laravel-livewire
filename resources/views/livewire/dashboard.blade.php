@@ -44,7 +44,7 @@
         </div> -->
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer" @click="openModal('users')">
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer" @click="userList()">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Users</h3>
@@ -125,7 +125,7 @@
             </div>
 
             <!-- Table View Section -->
-            <div x-show="currentView === 'table'" class="w-full overflow-x-auto">
+            <div x-show="currentView === 'table'" class="w-full overflow-x-auto" id="userList">
                 <div class="min-w-full px-4 sm:px-6 lg:px-8 py-4">
                     <!-- User Table Livewire Component -->
                     <livewire:user-table />
@@ -248,6 +248,15 @@
                     this.currentPage = 1; // Reset to first page when filtering
                 },
 
+                userList() {
+                    const el = document.getElementById('userList');
+                    if (el) {
+                        el.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+
+                    }
+                },
 
                 openModal(type) {
                     this.showModal = true;
