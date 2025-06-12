@@ -134,8 +134,7 @@ final class UserTable extends PowerGridComponent
     {
         return [
 
-            Column::make('Sr No', 'sr_no')
-                ->sortable(false),
+            Column::make('Sr No', 'sr_no'),
             Column::make('Name', 'name')
                 ->sortable(),
 
