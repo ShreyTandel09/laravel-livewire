@@ -4,8 +4,6 @@
 <head>
 
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css');
-
         .shake {
             animation: shake 0.5s ease-in-out;
         }
