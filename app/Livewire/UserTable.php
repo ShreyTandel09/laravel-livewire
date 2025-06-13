@@ -62,8 +62,9 @@ final class UserTable extends PowerGridComponent
             ->add('company')
             ->add('address')
             ->add('phone_number')
-            ->add('is_active')
-            ->add('sr_no', function () {
+            ->add('is_active', fn($user) => $user->is_active
+                ? '<span class="text-green-600 font-semibold">✔ Active</span>'
+                : '<span class="text-red-600 font-semibold">✖ Inactive</span>')->add('sr_no', function () {
                 static $counter = 0;
                 $currentPage = request('page', 1);
                 $perPage = $this->perPage ?? 10;
@@ -80,8 +81,7 @@ final class UserTable extends PowerGridComponent
             Column::make('Company', 'company')->sortable()->searchable(),
             Column::make('Address', 'address')->sortable()->searchable(),
             Column::make('Phone number', 'phone_number')->sortable()->searchable(),
-            Column::make('Status', 'is_active')
-                ->toggleable(true, 'Yes', 'No'),
+            Column::make('Status', 'is_active'),
             Column::action('Action'),
         ];
     }
@@ -99,8 +99,9 @@ final class UserTable extends PowerGridComponent
                         ->get()
                 )
                 ->optionLabel('company')
-                ->optionValue('company'), // This line is missing in your current code
-            Filter::boolean('is_active', 'is_active'),
+                ->optionValue('company'),
+            Filter::boolean('is_active', 'is_active')
+                ->label('Active', 'Inactive'),
         ];
     }
 
