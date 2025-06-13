@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Illuminate\Support\Facades\Session;
 
 final class UserTable extends PowerGridComponent
 {
@@ -31,24 +31,73 @@ final class UserTable extends PowerGridComponent
         'userUpdated' => 'refreshTable'
     ];
 
+    public function boot()
+    {
+        // Load persisted filters from session
+        $sessionKey = 'user_table_filters_' . Auth::id();
+        $savedFilters = Session::get($sessionKey, []);
+
+        // Log::info($savedFilters);
+
+        $this->companyFilter = $savedFilters['companyFilter'] ?? '';
+        $this->isActiveFilter = $savedFilters['isActiveFilter'] ?? '';
+        $this->searchFilter = $savedFilters['searchFilter'] ?? '';
+        $this->sortField = $savedFilters['sortField'] ?? '';
+        $this->sortDirection = $savedFilters['sortDirection'] ?? '';
+    }
+
     // Make the filters updatable
     public function updatedCompanyFilter()
     {
+        $this->saveFiltersToSession();
         $this->resetPage();
     }
 
     public function updatedIsActiveFilter()
     {
+        $this->saveFiltersToSession();
         $this->resetPage();
     }
 
     public function updatedSearchFilter()
     {
+        $this->saveFiltersToSession();
         $this->resetPage();
+    }
+
+    public function updated($property, $value)
+    {
+        // Save filters to session when any property is updated
+        $this->saveFiltersToSession();
+
+        // Log sorting changes for debugging
+        if (in_array($property, ['sortField', 'sortDirection', 'multiSort'])) {
+            Log::info("Sort updated: $property = $value");
+        }
+    }
+
+    private function saveFiltersToSession()
+    {
+        $sessionKey = 'user_table_filters_' . Auth::id();
+
+        // Get current PowerGrid sorting state
+        $currentSortField = $this->sortField ?? '';
+        $currentSortDirection = $this->sortDirection ?? '';
+
+        Session::put($sessionKey, [
+            'companyFilter' => $this->companyFilter,
+            'isActiveFilter' => $this->isActiveFilter,
+            'searchFilter' => $this->searchFilter,
+            'sortField' => $currentSortField,
+            'sortDirection' => $currentSortDirection
+        ]);
     }
 
     public function setUp(): array
     {
+        // Use PowerGrid's built-in persistence instead of manual session handling
+        $this->persist(['sortField', 'sortDirection'], prefix: (string) Auth::id());
+
 
         $this->companies = User::query()
             ->select('company')
@@ -111,10 +160,8 @@ final class UserTable extends PowerGridComponent
         return [];
     }
 
-
     public function fields(): PowerGridFields
     {
-
         return PowerGrid::fields()
             ->add('name')
             ->add('email')
@@ -133,23 +180,17 @@ final class UserTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-
             Column::make('Sr No', 'sr_no'),
             Column::make('Name', 'name')
-                ->sortable(),
-
+                ->sortable($this->saveFiltersToSession()),
             Column::make('Email', 'email')
-                ->sortable(),
-
+                ->sortable($this->saveFiltersToSession()),
             Column::make('Company', 'company')
-                ->sortable(),
-
+                ->sortable($this->saveFiltersToSession()),
             Column::make('Address', 'address')
-                ->sortable(),
-
+                ->sortable($this->saveFiltersToSession()),
             Column::make('Phone number', 'phone_number')
-                ->sortable(),
-
+                ->sortable($this->saveFiltersToSession()),
             Column::action('Action')
         ];
     }
@@ -163,7 +204,6 @@ final class UserTable extends PowerGridComponent
     public function delete($rowId): void
     {
         try {
-            //code...
             if (Auth::id() == $rowId) {
                 $this->dispatch('showToast', [
                     'type' => 'error',
